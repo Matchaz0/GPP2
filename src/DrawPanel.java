@@ -77,6 +77,7 @@ class DrawPanel extends JPanel implements MouseListener {
 
         // lose condition
         if (!checkIfValidHand()) {
+            hand = new ArrayList<>();
             g.drawString("You Lose!", 77, 268);
         }
     }
