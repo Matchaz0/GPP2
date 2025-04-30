@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Point;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.awt.Font;
 
@@ -56,7 +57,7 @@ class DrawPanel extends JPanel implements MouseListener {
         // drawing the bottom button
         // set font, set string, set surroning button
         g.setFont(new Font("Courier New", Font.BOLD, 20));
-        g.drawString("GET NEW CARDS", 77, 368);
+        g.drawString("Reset Game", 77, 368);
         g.drawRect((int)getNewButton.getX(), (int)getNewButton.getY(), (int)getNewButton.getWidth(), (int)getNewButton.getHeight());
 
         // drawing the replace button
@@ -80,11 +81,19 @@ class DrawPanel extends JPanel implements MouseListener {
         // getButton == 1 is left click
         if (e.getButton() == 1) {
             // If point clicked is inside button
+            // reset
             if (getNewButton.contains(clicked)) {
-                hand = Card.buildHand(9);
+                deck = Card.buildDeck();
+                hand = Card.buildHand2(deck, 9);
+                updateDeck();
             }
+            // replace
             if (replaceButton.contains(clicked)) {
-                hand = Card.buildHand2(deck, 1);
+                // get all highlighted cards
+                ArrayList<Card> highlightedCards = Card.getAllHighlight(hand);
+
+                System.out.println(highlightedCards);
+                hand = Card.buildHand2(deck, 9);
                 updateDeck();
             }
 

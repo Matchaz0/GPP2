@@ -81,6 +81,16 @@ public class Card {
         return highlight;
     }
 
+    public static ArrayList<Card> getAllHighlight(ArrayList<Card> hand) {
+        ArrayList<Card> highlightedCards = new ArrayList<>();
+        for (Card c : hand) {
+            if (c.getHighlight()) {
+                highlightedCards.add(c);
+            }
+        }
+        return highlightedCards;
+    }
+
 
     public BufferedImage getImage() {
         return image;
