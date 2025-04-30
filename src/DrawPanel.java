@@ -70,8 +70,14 @@ class DrawPanel extends JPanel implements MouseListener {
         // cards left
         g.drawString("Cards left: " + (deck.size() + hand.size()), 0, 460);
 
+        // win condition (this never happening)
         if (deck.size() + hand.size() == 0) {
             g.drawString("You Win!", 77, 268);
+        }
+
+        // lose condition
+        if (!checkIfValidHand()) {
+            g.drawString("You Lose!", 77, 268);
         }
     }
 
@@ -94,28 +100,9 @@ class DrawPanel extends JPanel implements MouseListener {
             if (replaceButton.contains(clicked)) {
                 // get all highlighted cards
                 ArrayList<Card> highlightedCards = Card.getAllHighlight(hand);
-                boolean valid = false;
-
-//                int sum = 0;
-//                if (highlightedCards.size() == 2) {
-//                    int sum = 0;
-//                    for (Card c :  highlightedCards) {
-//                        sum += Integer.parseInt(c.getValue());
-//                    }
-//                    if (sum == 11) {
-//                        valid = true;
-//                    }
-//                }
-//                if (highlightedCards.size() == 3) {
-//                    for (Card c :  highlightedCards) {
-//                        sum += Integer.parseInt(c.getValue());
-//                    }
-//                    if (sum == 11) {
-//                        valid = true;
-//                    }
-//                }
+                boolean valid = checkIfValid(highlightedCards);
                 for (int i = 0; i < hand.size(); i++) {
-                    if (highlightedCards.contains(hand.get(i))) {
+                    if (highlightedCards.contains(hand.get(i)) && valid) {
                         // remove from hand, get new card, then insert
                         hand.remove(hand.get(i));
                         ArrayList<Card> cardToAdd = Card.buildHand2(deck, 1);
@@ -150,10 +137,71 @@ class DrawPanel extends JPanel implements MouseListener {
             }
         }
 
-
-
+    }
+    public ArrayList<Integer> translate(ArrayList<Card> cards) {
+        ArrayList<Integer> translatedCardValues = new ArrayList<>();
+        for (Card c : cards) {
+            String value = c.getValue();
+            if (value.equals("02") || value.equals("03") || value.equals("04")
+                    || value.equals("05") || value.equals("06") || value.equals("07")
+                    || value.equals("08") || value.equals("09") || value.equals("10")
+            ) {
+                translatedCardValues.add(Integer.parseInt(value));
+            }
+            if (value.equals("A")) {
+                translatedCardValues.add(1);
+            }
+            if (value.equals("J")) {
+                translatedCardValues.add(11);
+            }
+            if (value.equals("Q")) {
+                translatedCardValues.add(12);
+            }
+            if (value.equals("K")) {
+                translatedCardValues.add(13);
+            }
+        }
+        return translatedCardValues;
+    }
+    public boolean checkIfValid(ArrayList<Card> highlightedCards) {
+        ArrayList<Integer> translatedValues = translate(highlightedCards);
+        if (highlightedCards.size() == 2) {
+            if (translatedValues.get(0) + translatedValues.get(1) == 11) {
+                return true;
+            }
+        }
+        if (highlightedCards.size() == 3) {
+            if (translatedValues.contains(11) && translatedValues.contains(12) && translatedValues.contains(13)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    // kinda tired
+    public boolean checkIfValidHand() {
+        ArrayList<Integer> translatedHand = translate(hand);
+        if (translatedHand.contains(11) && translatedHand.contains(12) && translatedHand.contains(13)) {
+            return true;
+        }
+        if (translatedHand.contains(1) && translatedHand.contains(10)) {
+            return true;
+        }
+        if (translatedHand.contains(2) && translatedHand.contains(9)) {
+            return true;
+        }
+        if (translatedHand.contains(3) && translatedHand.contains(8)) {
+            return true;
+        }
+        if (translatedHand.contains(4) && translatedHand.contains(7)) {
+            return true;
+        }
+        if (translatedHand.contains(5) && translatedHand.contains(6)) {
+            return true;
+        }
+        return false;
 
     }
+
     public void mouseReleased(MouseEvent e) { }
     public void mouseEntered(MouseEvent e) { }
     public void mouseExited(MouseEvent e) { }
