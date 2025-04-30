@@ -136,7 +136,7 @@ class DrawPanel extends JPanel implements MouseListener {
                 }
             }
         }
-
+    // test
     }
     public ArrayList<Integer> translate(ArrayList<Card> cards) {
         ArrayList<Integer> translatedCardValues = new ArrayList<>();
