@@ -23,12 +23,15 @@ class DrawPanel extends JPanel implements MouseListener {
         deck = Card.buildDeck();
         this.addMouseListener(this);
         hand = Card.buildHand2(deck, 9);
-        updateDeck();
+        updateDeck(hand);
     }
-    public void updateDeck() {
-        for (Card c : hand) {
+    public void updateDeck(ArrayList<Card> toRemove) {
+        for (Card c : toRemove) {
             deck.remove(c);
         }
+    }
+    public void updateDeck2(ArrayList<Card> toReplace) {
+
     }
 
     protected void paintComponent(Graphics g) {
@@ -65,9 +68,9 @@ class DrawPanel extends JPanel implements MouseListener {
         g.drawRect((int)replaceButton.getX(), (int)replaceButton.getY(), (int)replaceButton.getWidth(), (int)replaceButton.getHeight());
 
         // cards left
-        g.drawString("Cards left: " + deck.size(), 0, 460);
+        g.drawString("Cards left: " + (deck.size() + hand.size()), 0, 460);
 
-        if (deck.size() == 0) {
+        if (deck.size() + hand.size() == 0) {
             g.drawString("You Win!", 77, 268);
         }
     }
@@ -85,16 +88,43 @@ class DrawPanel extends JPanel implements MouseListener {
             if (getNewButton.contains(clicked)) {
                 deck = Card.buildDeck();
                 hand = Card.buildHand2(deck, 9);
-                updateDeck();
+                updateDeck(hand);
             }
             // replace
             if (replaceButton.contains(clicked)) {
                 // get all highlighted cards
                 ArrayList<Card> highlightedCards = Card.getAllHighlight(hand);
+                boolean valid = false;
+
+//                int sum = 0;
+//                if (highlightedCards.size() == 2) {
+//                    int sum = 0;
+//                    for (Card c :  highlightedCards) {
+//                        sum += Integer.parseInt(c.getValue());
+//                    }
+//                    if (sum == 11) {
+//                        valid = true;
+//                    }
+//                }
+//                if (highlightedCards.size() == 3) {
+//                    for (Card c :  highlightedCards) {
+//                        sum += Integer.parseInt(c.getValue());
+//                    }
+//                    if (sum == 11) {
+//                        valid = true;
+//                    }
+//                }
+                for (int i = 0; i < hand.size(); i++) {
+                    if (highlightedCards.contains(hand.get(i))) {
+                        // remove from hand, get new card, then insert
+                        hand.remove(hand.get(i));
+                        ArrayList<Card> cardToAdd = Card.buildHand2(deck, 1);
+                        updateDeck(cardToAdd);
+                        hand.add(i, cardToAdd.getFirst());
+                    }
+                }
 
                 System.out.println(highlightedCards);
-                hand = Card.buildHand2(deck, 9);
-                updateDeck();
             }
 
 
